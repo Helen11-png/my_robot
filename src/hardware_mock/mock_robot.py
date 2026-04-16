@@ -72,8 +72,8 @@ class MockRobot:
             print(f"❌ [ROBOT] Recording failed: {e}")
             return None
 
+    # src/hardware_mock/mock_robot.py — в метод speak_response
     def speak_response(self, audio_filepath):
-        """Проигрывание ответа через динамики"""
         if not audio_filepath or not os.path.exists(audio_filepath):
             print("❌ [ROBOT] Audio file not found!")
             return
@@ -85,7 +85,15 @@ class MockRobot:
             pygame.mixer.music.play()
             while pygame.mixer.music.get_busy():
                 time.sleep(0.1)
+            pygame.mixer.music.unload()  # Важно: выгрузить файл
         except:
-            # Fallback для Windows
             os.system(f'start {audio_filepath}')
+            time.sleep(3)
+
+        # Удаляем временный файл
+        try:
+            os.remove(audio_filepath)
+        except:
+            pass
+
         print("🤖 [ROBOT] Done speaking.")
