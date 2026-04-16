@@ -4,12 +4,15 @@ from gtts import gTTS
 import numpy as np
 import wave
 import requests
-import datetime
-
+import re
+from user_info import MY_INFO
+from datetime import datetime
+from config import ROBOT_NAME, SYSTEM_PROMPT
 
 class AIAssistant:
-    def __init__(self, robot_name="Jarvis Mini"):
-        self.robot_name = robot_name
+    def __init__(self):
+        self.robot_name = ROBOT_NAME
+        self.system_prompt = SYSTEM_PROMPT
         self.local_url = "http://127.0.0.1:1234/v1/chat/completions"
 
         # 🔥 ИСТОРИЯ ДИАЛОГА (максимум 4 сообщения = 2 вопроса-ответа)
@@ -20,7 +23,6 @@ class AIAssistant:
         self.whisper_model = whisper.load_model("tiny.en")
 
     def transcribe(self, audio_path):
-        # ... БЕЗ ИЗМЕНЕНИЙ (ваш рабочий код) ...
         if not audio_path or not os.path.exists(audio_path):
             return None
         print("🧠 [AI] Transcribing...")
@@ -45,18 +47,87 @@ class AIAssistant:
         text = result["text"].strip()
         print(f"🗣️ Human: '{text}'")
         return text
+    def _get_weather(self, city="Moscow"):
+        try:
+            API_KEY = "b64bfa614f121b4dac226d1f350b4ab8"
+            url = "http://api.openweathermap.org/data/2.5/weather"
+            params = {
+                "q": city,
+                "appid": API_KEY,
+                "units": "metric",
+                "lang": "en"
+            }
+            resp = requests.get(url, params=params, timeout=5)
+            if resp.status_code == 200:
+                data = resp.json()
+                temp = data["main"]["temp"]
+                desc = data["weather"][0]["description"]
+                return f"In {city}, it's {temp:.0f}°C and {desc}."
+        except Exception as e:
+            print(f"Weather error: {e}")
+        return None
+    def _extract_city(self, text):
+        """Извлекает город из текста"""
+        text_lower = text.lower()
+        patterns = [
+            r"weather (?:in|at) ([a-z\s\-']+?)(?:\?|$|\.|,)",
+            r"(?:in|at) ([a-z\s\-']+?)(?:\?|$|\.|,).*weather",
+            r"what(?:'s| is) the weather (?:in|at) ([a-z\s\-']+?)(?:\?|$)",
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, text_lower)
+            if match:
+                city = match.group(1).strip()
+                return " ".join(word.capitalize() for word in city.split())
+
+        return None
 
     def generate_response(self, user_text):
         if not user_text:
             return "I didn't catch that."
 
-        # 🔥 СПЕЦИАЛЬНЫЕ КОМАНДЫ
         user_lower = user_text.lower()
 
+        # 🔥 ПОГОДА
+        if "weather" in user_lower:
+            city = self._extract_city(user_text)
+            if not city:
+                return "Which city would you like the weather for?"
+            weather = self._get_weather(city)
+            if weather:
+                return weather
+            else:
+                return f"Sorry, I couldn't get the weather for {city}."
+
+        # 🔥 ВОПРОСЫ О ПОЛЬЗОВАТЕЛЕ
+        if "my name" in user_lower or "who am i" in user_lower:
+            return f"Your name is {MY_INFO['name']}."
+
+        if "my age" in user_lower or "how old am i" in user_lower:
+            return f"You are {MY_INFO['age']} years old."
+        if "profession" in user_lower or "career" in user_lower:
+            return f"You are {MY_INFO['profession']}"
+
+        # 🔥 ИСПРАВЛЕНО: правильное условие для расписания
+        if "my schedule" in user_lower or "plan" in user_lower or "my classes" in user_lower:
+            today = datetime.now().strftime("%A").lower()
+            schedule = MY_INFO['schedule'].get(today, "No classes today!")
+            return f"Today ({today}) you have: {schedule}"
+
+        if "my dreams" in user_lower:
+            dreams = ", ".join(MY_INFO['dreams'][:3])
+            return f"Your dreams include: {dreams}."
+
+        if "what do i study" in user_lower or "my specialty" in user_lower:
+            return f"You study {MY_INFO['specialty']} at {MY_INFO['university']}."
+
+        # 🔥 СПЕЦИАЛЬНЫЕ КОМАНДЫ
         if "clear history" in user_lower or "forget everything" in user_lower:
             self.conversation_history = []
             print("🧹 History cleared!")
             return "Memory cleared. What would you like to talk about?"
+
         if "what time" in user_lower or "current time" in user_lower:
             now = datetime.now()
             return f"It's {now.strftime('%H:%M')}."
@@ -65,21 +136,17 @@ class AIAssistant:
             now = datetime.now()
             return f"Today is {now.strftime('%A, %B %d, %Y')}."
 
+        # 🔥 ЕСЛИ НИЧЕГО НЕ СРАБОТАЛО — ИДЁМ В LLM
         print("🧠 [AI] Thinking...")
 
         try:
-            # 🔥 СОБИРАЕМ СООБЩЕНИЯ С ИСТОРИЕЙ
             messages = []
-
-            # Системная инструкция
             system_prompt = f"You are {self.robot_name}, a tiny helpful robot. Answer in 1-3 sentences. Be friendly and conversational. Remember the context of our conversation."
 
-            # Если история пустая — просто инструкция + вопрос
             if not self.conversation_history:
                 prompt = f"{system_prompt}\n\nUser: {user_text}\nAssistant:"
                 messages = [{"role": "user", "content": prompt}]
             else:
-                # С историей — формируем диалог
                 conversation_text = system_prompt + "\n\n"
                 for entry in self.conversation_history:
                     conversation_text += f"{entry['role'].capitalize()}: {entry['content']}\n"
@@ -101,21 +168,14 @@ class AIAssistant:
 
                 if answer:
                     print(f"🤖 {self.robot_name}: '{answer}'")
-
-                    # 🔥 СОХРАНЯЕМ В ИСТОРИЮ
                     self.conversation_history.append({"role": "user", "content": user_text})
                     self.conversation_history.append({"role": "assistant", "content": answer})
-
-                    # Обрезаем историю если слишком длинная
                     if len(self.conversation_history) > self.max_history:
                         self.conversation_history = self.conversation_history[-self.max_history:]
-
                     return answer
 
         except Exception as e:
             print(f"⚠️ LLM error: {type(e).__name__} - {e}")
-            # При ошибке пробуем без истории
-            return self._fallback_response(user_text)
 
         return self._fallback_response(user_text)
 
