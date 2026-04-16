@@ -1,4 +1,4 @@
-# src/brain/assistant.py
+# src/brain/assistant.py (ФИНАЛЬНАЯ РАБОЧАЯ ВЕРСИЯ)
 import os
 import whisper
 from gtts import gTTS
@@ -10,19 +10,6 @@ import requests
 class AIAssistant:
     def __init__(self, robot_name="Jarvis Mini"):
         self.robot_name = robot_name
-
-        # Настройка Gemini
-        try:
-            import google.generativeai as genai
-            genai.configure(api_key="AQ.Ab8RN6I3m6nR18200OQWAjj5bzPgLVIDfdR_Rakxyfm4EseQMA")
-            self.gemini_model = genai.GenerativeModel('gemini-2.0-flash-exp')
-            self.has_gemini = True
-            print("✅ Gemini API configured")
-        except Exception as e:
-            print(f"⚠️ Gemini not available: {e}")
-            self.has_gemini = False
-
-        # Локальный fallback (LM Studio)
         self.local_url = "http://127.0.0.1:1234/v1/chat/completions"
 
         print("🧠 Loading Whisper model 'tiny.en'...")
@@ -59,89 +46,46 @@ class AIAssistant:
         print(f"🗣️ Human: '{text}'")
         return text
 
-    def _try_gemini(self, user_text):
-        if not self.has_gemini:
-            return None
+    def generate_response(self, user_text):
+        if not user_text:
+            return "I didn't catch that."
+
+        print("🧠 [AI] Thinking...")
+
         try:
-            import google.generativeai as genai
+            # 🔥 MISTRAL В LM STUDIO НЕ ЛЮБИТ ROLE="SYSTEM"
+            # Используем только user и assistant
+            prompt = f"You are {self.robot_name}, a tiny helpful robot. Answer in 1-2 short sentences. Be friendly.\n\nUser: {user_text}\nAssistant:"
 
-            # Пробуем несколько имён моделей
-            for model_name in ['gemini-1.5-flash', 'gemini-pro', 'gemini-2.0-flash-exp']:
-                try:
-                    model = genai.GenerativeModel(model_name)
-                    prompt = f"You are {self.robot_name}, a tiny robot. Answer in 1 short sentence. English only.\n\nUser: {user_text}\nAssistant:"
-                    response = model.generate_content(prompt)
-                    answer = response.text.strip()
-                    if answer:
-                        return answer
-                except:
-                    continue
-
-        except Exception as e:
-            print(f"⚠️ Gemini failed: {type(e).__name__}")
-        return None
-
-    def _try_local_llm(self, user_text):
-        """Попытка использовать локальную LM Studio"""
-        try:
             payload = {
+                "model": "local-model",  # 🔥 ОБЯЗАТЕЛЬНО для LM Studio
                 "messages": [
-                    {"role": "user",
-                     "content": f"Answer in one short sentence. Be direct. Do not show your thinking process.\n\nUser: {user_text}\nAnswer:"}
+                    {"role": "user", "content": prompt}
                 ],
                 "max_tokens": 80,
                 "temperature": 0.7
             }
-            resp = requests.post("http://127.0.0.1:1234/v1/chat/completions", json=payload, timeout=30)
+
+            resp = requests.post(self.local_url, json=payload, timeout=20)
+
+            print(f"🔍 DEBUG: Status = {resp.status_code}")
 
             if resp.status_code == 200:
                 data = resp.json()
-                msg = data["choices"][0]["message"]
-                raw = msg.get("content", "") or msg.get("reasoning_content", "")
+                answer = data["choices"][0]["message"]["content"].strip()
 
-                # 🔥 ВЫТАСКИВАЕМ ТОЛЬКО ОТВЕТ
-                if "Thinking Process:" in raw:
-                    # Ищем строку, которая не является частью размышлений
-                    lines = raw.split('\n')
-                    for line in lines:
-                        line = line.strip()
-                        # Пропускаем шаги мышления
-                        if line and not line[
-                            0].isdigit() and "Thinking" not in line and "Analyze" not in line and "Persona" not in line:
-                            # Это похоже на реальный ответ
-                            if len(line) > 3 and line[0].isalpha():
-                                return line
-                    # Если не нашли — берём последнюю строку
-                    return lines[-1].strip() if lines[-1].strip() else "Hello! How can I help?"
+                print(f"🔍 DEBUG: Answer = '{answer}'")
 
-                return raw.strip() if raw else "Hello! How can I help?"
+                if answer:
+                    print(f"🤖 {self.robot_name}: '{answer}'")
+                    return answer
+            else:
+                # Покажем ошибку для диагностики
+                print(f"🔍 DEBUG: Error response = {resp.text[:200]}")
 
         except Exception as e:
-            print(f"⚠️ Local LLM error: {type(e).__name__}")
+            print(f"⚠️ LLM error: {type(e).__name__} - {e}")
 
-
-    def generate_response(self, user_text):
-        """Гибридный генератор ответа"""
-        if not user_text:
-            return "I didn't catch that."
-
-        print("🧠 [AI] Generating response...")
-
-        # 1. Пробуем Gemini (если есть интернет)
-        answer = self._try_gemini(user_text)
-        if answer:
-            print(f"🤖 {self.robot_name} (Gemini): '{answer}'")
-            return answer
-
-        # 2. Fallback на локальную модель
-        print("🔄 Falling back to local LLM...")
-        answer = self._try_local_llm(user_text)
-        if answer:
-            print(f"🤖 {self.robot_name} (Local): '{answer}'")
-            return answer
-
-        # 3. Совсем ничего не работает
-        return "Hello! I'm here and ready to help."
 
     def synthesize_speech(self, text):
         print("🧠 [AI] Generating voice...")
