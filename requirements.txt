@@ -1,10 +1,6 @@
 openai>=1.0.0
 openai-whisper
 gtts
-playsound==1.2.2
 pygame
 pyaudio
 numpy
-python-dotenv
-flask  # понадобится позже для связи с ESP
-pyserial # на случай отладки по USB
