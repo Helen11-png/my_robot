@@ -1,7 +1,7 @@
 MY_INFO = {
     "name": "Helen",
     "age": 18,
-    "birthday": "August 11 2007",
+    "birthday": "August 11, 2007",
     "university": "Russian Technological University MIREA",
     "profession": "Full-stack Development",
     "schedule": {

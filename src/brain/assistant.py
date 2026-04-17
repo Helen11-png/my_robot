@@ -6,7 +6,7 @@ import wave
 import requests
 import re
 from user_info import MY_INFO
-from datetime import datetime
+from datetime import datetime, date
 from config import ROBOT_NAME, SYSTEM_PROMPT
 
 class AIAssistant:
@@ -47,6 +47,84 @@ class AIAssistant:
         text = result["text"].strip()
         print(f"🗣️ Human: '{text}'")
         return text
+
+    def _calculate_birthday_info(self, user_text):
+        """Рассчитывает информацию о дне рождения"""
+        user_lower = user_text.lower()
+
+        # Данные из MY_INFO
+        birthday_str = MY_INFO.get('birthday', '')
+        age = MY_INFO.get('age', 0)
+
+        if not birthday_str:
+            return None
+
+        # Парсим дату рождения (формат: "August 11, 2007" или "11 August 2007")
+        try:
+            # Пробуем разные форматы
+            for fmt in ["%B %d, %Y", "%d %B %Y", "%Y-%m-%d"]:
+                try:
+                    bday = datetime.strptime(birthday_str, fmt).date()
+                    break
+                except:
+                    continue
+            else:
+                return None
+        except:
+            return None
+
+        today = date.today()
+
+        # Когда будет следующий день рождения
+        next_bday = date(today.year, bday.month, bday.day)
+        if next_bday < today:
+            next_bday = date(today.year + 1, bday.month, bday.day)
+
+        days_until = (next_bday - today).days
+        future_age = next_bday.year - bday.year
+
+        # Вопрос: "In how many days is my birthday?"
+        if "how many days" in user_lower and "birthday" in user_lower:
+            if days_until == 0:
+                return "Today is your birthday! Happy birthday! 🎉"
+            elif days_until == 1:
+                return "Your birthday is tomorrow!"
+            else:
+                return f"Your next birthday is in {days_until} days, on {next_bday.strftime('%B %d')}."
+
+        # Вопрос: "When will I be X years old?"
+        age_match = re.search(r'when will i be (\d+)', user_lower)
+        if age_match:
+            target_age = int(age_match.group(1))
+            target_year = bday.year + target_age
+            target_date = date(target_year, bday.month, bday.day)
+
+            if target_date < today:
+                return f"You already turned {target_age} on {target_date.strftime('%B %d, %Y')}."
+
+            days_to_target = (target_date - today).days
+            years_to_target = target_date.year - today.year
+            months_to_target = target_date.month - today.month
+            if months_to_target < 0:
+                years_to_target -= 1
+                months_to_target += 12
+
+            return f"You will turn {target_age} on {target_date.strftime('%B %d, %Y')}, which is in {days_to_target} days (about {years_to_target} years and {months_to_target} months)."
+
+        # Вопрос: "How old will I be in X years?"
+        year_match = re.search(r'how old will i be in (\d+) years?', user_lower)
+        if year_match:
+            years_ahead = int(year_match.group(1))
+            future_year = today.year + years_ahead
+            # Проверяем, прошёл ли уже день рождения в этом году
+            this_year_bday = date(today.year, bday.month, bday.day)
+            if today >= this_year_bday:
+                future_age = age + years_ahead
+            else:
+                future_age = age + years_ahead
+            return f"In {years_ahead} years, you will be {future_age} years old."
+
+        return None
     def _get_weather(self, city="Moscow"):
         try:
             API_KEY = "b64bfa614f121b4dac226d1f350b4ab8"
@@ -89,6 +167,11 @@ class AIAssistant:
 
         user_lower = user_text.lower()
 
+        # 🔥 ВОПРОСЫ О ДАТАХ И ВОЗРАСТЕ (считаем точно!)
+        birthday_calc = self._calculate_birthday_info(user_text)
+        if birthday_calc:
+            return birthday_calc
+
         # 🔥 ПОГОДА
         if "weather" in user_lower:
             city = self._extract_city(user_text)
@@ -100,16 +183,17 @@ class AIAssistant:
             else:
                 return f"Sorry, I couldn't get the weather for {city}."
 
-        # 🔥 ВОПРОСЫ О ПОЛЬЗОВАТЕЛЕ
+        # 🔥 ВОПРОСЫ О ПОЛЬЗОВАТЕЛЕ (шаблонные)
         if "my name" in user_lower or "who am i" in user_lower:
             return f"Your name is {MY_INFO['name']}."
-
+        if "my birthday" in user_lower:
+            return f"Your birthday is {MY_INFO['birthday']}."
         if "my age" in user_lower or "how old am i" in user_lower:
             return f"You are {MY_INFO['age']} years old."
         if "profession" in user_lower or "career" in user_lower:
-            return f"You are {MY_INFO['profession']}"
+            return f"You are {MY_INFO.get('profession', 'a developer')}."
 
-        # 🔥 ИСПРАВЛЕНО: правильное условие для расписания
+        # 🔥 РАСПИСАНИЕ
         if "my schedule" in user_lower or "plan" in user_lower or "my classes" in user_lower:
             today = datetime.now().strftime("%A").lower()
             schedule = MY_INFO['schedule'].get(today, "No classes today!")
