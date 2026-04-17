@@ -14,11 +14,8 @@ class AIAssistant:
         self.robot_name = ROBOT_NAME
         self.system_prompt = SYSTEM_PROMPT
         self.local_url = "http://127.0.0.1:1234/v1/chat/completions"
-
-        # 🔥 ИСТОРИЯ ДИАЛОГА (максимум 4 сообщения = 2 вопроса-ответа)
         self.conversation_history = []
-        self.max_history = 4
-
+        self.max_history = 6
         print("🧠 Loading Whisper model 'tiny.en'...")
         self.whisper_model = whisper.load_model("tiny.en")
 
@@ -51,17 +48,11 @@ class AIAssistant:
     def _calculate_birthday_info(self, user_text):
         """Рассчитывает информацию о дне рождения"""
         user_lower = user_text.lower()
-
-        # Данные из MY_INFO
         birthday_str = MY_INFO.get('birthday', '')
         age = MY_INFO.get('age', 0)
-
         if not birthday_str:
             return None
-
-        # Парсим дату рождения (формат: "August 11, 2007" или "11 August 2007")
         try:
-            # Пробуем разные форматы
             for fmt in ["%B %d, %Y", "%d %B %Y", "%Y-%m-%d"]:
                 try:
                     bday = datetime.strptime(birthday_str, fmt).date()
@@ -72,18 +63,12 @@ class AIAssistant:
                 return None
         except:
             return None
-
         today = date.today()
-
-        # Когда будет следующий день рождения
         next_bday = date(today.year, bday.month, bday.day)
         if next_bday < today:
             next_bday = date(today.year + 1, bday.month, bday.day)
-
         days_until = (next_bday - today).days
         future_age = next_bday.year - bday.year
-
-        # Вопрос: "In how many days is my birthday?"
         if "how many days" in user_lower and "birthday" in user_lower:
             if days_until == 0:
                 return "Today is your birthday! Happy birthday! 🎉"
@@ -91,8 +76,6 @@ class AIAssistant:
                 return "Your birthday is tomorrow!"
             else:
                 return f"Your next birthday is in {days_until} days, on {next_bday.strftime('%B %d')}."
-
-        # Вопрос: "When will I be X years old?"
         age_match = re.search(r'when will i be (\d+)', user_lower)
         if age_match:
             target_age = int(age_match.group(1))
