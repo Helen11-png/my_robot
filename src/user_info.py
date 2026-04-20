@@ -12,8 +12,8 @@ MY_INFO = {
         "friday": "homework",
         "saturday": "5 lessons in university",
         "sunday": "homework",
-
     },
+    "important": ["ENGLISH C1 LEVEL", "MAXIMUM ON EXAMS", "PROGRAMMING WITHOUT AI (BACKEND AND ROBOTICS"],
     "dreams": ["apply for a Master's degree in Canada or USA"],
     "hobbies": ["coding", "robotics", "reading", "English language"]
 }
