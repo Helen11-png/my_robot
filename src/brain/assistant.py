@@ -192,8 +192,11 @@ class AIAssistant:
             print("Can I ask few questions?") # как сделать считывание по каждому вопросу?
             print("What date is it?")
             date=int(user_text) #уточнить дату
+# ДОБАВИТЬ ВОЗМОЖНОСТЬ ОБЩАТЬСЯ ПЕРЕПИСЫВАЯСЬ!!!!!
 # ДОП ИДЕЯ: СДЕЛАТЬ ПАРСИНГ ДАННЫХ (ТИПО КОЛВО ЗАДАЧ С ЛИТКОДА)
 # ЕЩЕ ДОП ИДЕЯ: ДОДЕЛАТЬ ФАЙЛ gpa_for_now.json
+# Доделать прослушивание и добавление доп музыки
+# 🍓🥥🌸🍁🍂
             notes={
                 "text": len(user_text),
                 "date": int(user_text),
