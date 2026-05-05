@@ -4,6 +4,7 @@ from gtts import gTTS
 import numpy as np
 import wave
 import requests
+import json
 import re
 from user_info import MY_INFO
 from datetime import datetime, date
@@ -94,7 +95,6 @@ class AIAssistant:
 
             return f"You will turn {target_age} on {target_date.strftime('%B %d, %Y')}, which is in {days_to_target} days (about {years_to_target} years and {months_to_target} months)."
 
-        # Вопрос: "How old will I be in X years?"
         year_match = re.search(r'how old will i be in (\d+) years?', user_lower)
         if year_match:
             years_ahead = int(year_match.group(1))
@@ -147,15 +147,11 @@ class AIAssistant:
     def generate_response(self, user_text):
         if not user_text:
             return "I didn't catch that."
-
         user_lower = user_text.lower()
 
-        # 🔥 ВОПРОСЫ О ДАТАХ И ВОЗРАСТЕ (считаем точно!)
         birthday_calc = self._calculate_birthday_info(user_text)
         if birthday_calc:
             return birthday_calc
-
-        # 🔥 ПОГОДА
         if "weather" in user_lower:
             city = self._extract_city(user_text)
             if not city:
@@ -166,7 +162,6 @@ class AIAssistant:
             else:
                 return f"Sorry, I couldn't get the weather for {city}."
 
-        # 🔥 ВОПРОСЫ О ПОЛЬЗОВАТЕЛЕ (шаблонные)
         if "my name" in user_lower or "who am i" in user_lower:
             return f"Your name is {MY_INFO['name']}."
         if "my birthday" in user_lower:
@@ -176,7 +171,6 @@ class AIAssistant:
         if "profession" in user_lower or "career" in user_lower:
             return f"You are {MY_INFO.get('profession', 'a developer')}."
 
-        # 🔥 РАСПИСАНИЕ
         if "my schedule" in user_lower or "plan" in user_lower or "my classes" in user_lower:
             today = datetime.now().strftime("%A").lower()
             schedule = MY_INFO['schedule'].get(today, "No classes today!")
@@ -189,7 +183,29 @@ class AIAssistant:
         if "what do i study" in user_lower or "my specialty" in user_lower:
             return f"You study {MY_INFO['specialty']} at {MY_INFO['university']}."
 
-        # 🔥 СПЕЦИАЛЬНЫЕ КОМАНДЫ
+        if "make a note" in user_lower or "recall me" in user_lower or "dont' forget" in user_lower or "should remember" in user_lower:
+            output_file = '../to_not_to_forget/have_to_remember.txt'
+            user_text.to_txt(output_file, index=False)
+            print(" Information was written in txt")
+            #сделать переход строк для txt файла
+            # теперь json:
+            print("Can I ask few questions?") # как сделать считывание по каждому вопросу?
+            print("What date is it?")
+            date=int(user_text) #уточнить дату
+# ДОП ИДЕЯ: СДЕЛАТЬ ПАРСИНГ ДАННЫХ (ТИПО КОЛВО ЗАДАЧ С ЛИТКОДА)
+# ЕЩЕ ДОП ИДЕЯ: ДОДЕЛАТЬ ФАЙЛ gpa_for_now.json
+            notes={
+                "text": len(user_text),
+                "date": int(user_text),
+                "importance": int(importance),
+            }
+            with open('../to_not_to_forget/have_to_remember.json', 'w', encoding='utf-8') as f:
+                json.dump(notes, f, indent=2, ensure_ascii=False)
+            return "I will not forget about it"
+
+
+
+
         if "clear history" in user_lower or "forget everything" in user_lower:
             self.conversation_history = []
             print("🧹 History cleared!")
@@ -203,7 +219,7 @@ class AIAssistant:
             now = datetime.now()
             return f"Today is {now.strftime('%A, %B %d, %Y')}."
 
-        # 🔥 ЕСЛИ НИЧЕГО НЕ СРАБОТАЛО — ИДЁМ В LLM
+
         print("🧠 [AI] Thinking...")
 
         try:

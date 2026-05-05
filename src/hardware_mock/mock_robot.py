@@ -17,7 +17,6 @@ class MockRobot:
         print("🤖 Mock Robot initialized. I'm ready for conversation!")
 
     def think_animation(self):
-        """Робот показывает, что он думает"""
         def spin():
             print("💭 [ROBOT] Thinking...")
             time.sleep(1.5)
@@ -26,8 +25,7 @@ class MockRobot:
         thread.start()
         return thread
 
-    def listen_for_speech(self, duration=4):
-        """Запись речи с микрофона ноутбука"""
+    def listen_for_speech(self, duration=6):
         print(f"🎤 [ROBOT] Listening for {duration} seconds... Speak now!")
 
         try:
@@ -38,7 +36,6 @@ class MockRobot:
             FORMAT = pyaudio.paInt16
             CHANNELS = 1
             RATE = 16000
-
             p = pyaudio.PyAudio()
             stream = p.open(format=FORMAT,
                             channels=CHANNELS,
