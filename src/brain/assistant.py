@@ -183,28 +183,58 @@ class AIAssistant:
         if "what do i study" in user_lower or "my specialty" in user_lower:
             return f"You study {MY_INFO['specialty']} at {MY_INFO['university']}."
 
-        if "make a note" in user_lower or "recall me" in user_lower or "dont' forget" in user_lower or "should remember" in user_lower:
-            output_file = '../to_not_to_forget/have_to_remember.txt'
-            user_text.to_txt(output_file, index=False)
-            print(" Information was written in txt")
-            #сделать переход строк для txt файла
-            # теперь json:
-            print("Can I ask few questions?") # как сделать считывание по каждому вопросу?
-            print("What date is it?")
-            date=int(user_text) #уточнить дату
-# ДОБАВИТЬ ВОЗМОЖНОСТЬ ОБЩАТЬСЯ ПЕРЕПИСЫВАЯСЬ!!!!!
+        if "make a note" in user_lower or "remind me" in user_lower or "don't forget" in user_lower or "should remember" in user_lower:
+            note_text = None
+            patterns = [
+                r"(?:make a note|remind me|don'?t forget|should remember)\s*(?:about\s*)?(.+)",
+                r"^(?:note|remember):\s*(.+)",
+            ]
+            for pattern in patterns:
+                match = re.search(pattern, user_lower)
+                if match:
+                    note_text = match.group(1).strip()
+                    break
+
+            if not note_text:
+                # Если не смогли извлечь — спрашиваем уточнение
+                self._pending_action = "awaiting_note_text"
+                return "What should I remember? Please tell me the note."
+
+            # Сохраняем заметку
+            self._save_note(note_text)
+            return f"I'll remember: '{note_text}'."
+        if "what are my notes" in user_lower or "read my notes" in user_lower or "show notes" in user_lower:
+            notes = self._read_notes()
+            if not notes:
+                return "You have no saved notes."
+            if len(notes) == 1:
+                return f"You have one note: '{notes[0]['text']}' (saved on {notes[0]['date'][:10]})."
+            notes_list = "; ".join([f"{n['id']}. '{n['text']}'" for n in notes[-5:]])
+            return f"Your last {min(len(notes), 5)} notes: {notes_list}."
+
+        # Удаление заметок
+        if "delete note" in user_lower or "remove note" in user_lower:
+            # Пробуем найти номер заметки
+            num_match = re.search(r'(\d+)', user_text)
+            if num_match:
+                note_id = int(num_match.group(1))
+                notes = self._read_notes()
+                if 1 <= note_id <= len(notes):
+                    deleted = notes.pop(note_id - 1)
+                    # Перезаписываем файл
+                    notes_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'to_not_to_forget',
+                                              'have_to_remember.json')
+                    with open(notes_file, 'w', encoding='utf-8') as f:
+                        json.dump(notes, f, indent=2, ensure_ascii=False)
+                    return f"Deleted note {note_id}: '{deleted['text']}'."
+            return "Which note should I delete? Say 'delete note 1'."
+
+        # ДОБАВИТЬ ВОЗМОЖНОСТЬ ОБЩАТЬСЯ ПЕРЕПИСЫВАЯСЬ!!!!!
 # ДОП ИДЕЯ: СДЕЛАТЬ ПАРСИНГ ДАННЫХ (ТИПО КОЛВО ЗАДАЧ С ЛИТКОДА)
 # ЕЩЕ ДОП ИДЕЯ: ДОДЕЛАТЬ ФАЙЛ gpa_for_now.json
 # Доделать прослушивание и добавление доп музыки
 # 🍓🥥🌸🍁🍂
-            notes={
-                "text": len(user_text),
-                "date": int(user_text),
-                "importance": int(importance),
-            }
-            with open('../to_not_to_forget/have_to_remember.json', 'w', encoding='utf-8') as f:
-                json.dump(notes, f, indent=2, ensure_ascii=False)
-            return "I will not forget about it"
+
 
 
 
@@ -264,6 +294,55 @@ class AIAssistant:
             print(f"⚠️ LLM error: {type(e).__name__} - {e}")
 
         return self._fallback_response(user_text)
+
+    def _save_note(self, note_text, importance=1, note_date=None):
+        """Сохраняет заметку в JSON файл"""
+        try:
+            notes_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'to_not_to_forget',
+                                      'have_to_remember.json')
+            os.makedirs(os.path.dirname(notes_file), exist_ok=True)
+
+            # Загружаем существующие заметки
+            notes = []
+            if os.path.exists(notes_file):
+                try:
+                    with open(notes_file, 'r', encoding='utf-8') as f:
+                        notes = json.load(f)
+                        if not isinstance(notes, list):
+                            notes = []
+                except:
+                    notes = []
+
+            # Добавляем новую заметку
+            new_note = {
+                "text": note_text,
+                "date": note_date or datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "importance": importance,
+                "id": len(notes) + 1
+            }
+            notes.append(new_note)
+
+            # Сохраняем
+            with open(notes_file, 'w', encoding='utf-8') as f:
+                json.dump(notes, f, indent=2, ensure_ascii=False)
+
+            print(f"✅ Note saved: '{note_text}'")
+            return True
+        except Exception as e:
+            print(f"❌ Error saving note: {e}")
+            return False
+
+    def _read_notes(self):
+        """Читает сохранённые заметки"""
+        try:
+            notes_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'to_not_to_forget',
+                                      'have_to_remember.json')
+            if not os.path.exists(notes_file):
+                return []
+            with open(notes_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            return []
 
     def _fallback_response(self, user_text):
         """Запасной ответ без LLM"""

@@ -25,7 +25,7 @@ class MockRobot:
         thread.start()
         return thread
 
-    def listen_for_speech(self, duration=6):
+    def listen_for_speech(self, duration=4):
         print(f"🎤 [ROBOT] Listening for {duration} seconds... Speak now!")
 
         try:
