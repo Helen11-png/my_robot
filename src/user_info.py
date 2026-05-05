@@ -15,5 +15,6 @@ MY_INFO = {
     },
     "important": ["ENGLISH C1 LEVEL", "MAXIMUM ON EXAMS", "PROGRAMMING WITHOUT AI (BACKEND AND ROBOTICS"],
     "dreams": ["apply for a Master's degree in Canada or USA"],
-    "hobbies": ["coding", "robotics", "reading", "English language"]
+    "hobbies": ["coding", "robotics", "reading", "English language"],
+
 }
