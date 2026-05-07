@@ -289,45 +289,25 @@ cliche / cliché — something said too often, becoming boring (noun); said too 
 click — suddenly understand; make a short sharp sound; start to like each other immediately
 climate — the situation, feelings, opinions at a particular time
 cling — hold someone/something tightly (clung)
-
 clinical — considering facts without emotion
-
 close — to end (verb); looking/listening carefully (adj)
-
 closed — not wanting to accept new ideas; behind closed doors: privately
-
 closure — when a business stops operating
-
 cloud — be on cloud nine: extremely happy (noun); to confuse (verb)
-
 clumsiness — the quality of being clumsy
-
 clutch — to hold something tightly; sb's clutches: their control (often evil)
-
 coastline — the part of the land along the edge of the sea
-
 coherence — the state of being clear; shared beliefs/purpose in a group
-
 coherent — clear and carefully considered (argument/plan); able to be understood (person)
-
 coin — to be the first to use a new word/phrase (verb)
-
 coincide — happen at the same time; be the same (opinions/ideas)
-
 cold — in cold blood: cruelly; make your blood run cold: frighten very much
-
 coldness — low temperature; unfriendliness
-
 collapse — to fail to work or succeed (verb)
-
 collect — collect yourself/thoughts: control feelings and thoughts
-
 colour — interesting qualities (noun); skin colour showing race (noun); to affect what someone does/feels (verb)
-
 combat — a fight, especially in war (noun); to try to stop something unpleasant (verb)
-
 come — come to think of it: just thought of something; come into being: start to exist; come to light: become known; come under fire: be criticized; come to terms with: accept a bad situation
-
 comeback — a successful attempt to become famous/powerful againcomfort — pleasant life with enough money; feeling better after worry (noun); to make someone feel better (verb)
 comfortable — having enough money for everything you need
 comforting — making you feel better when sad/anxious
@@ -453,3 +433,150 @@ custody — legal right to look after a child; being kept in prison before trial
 cut — cut short: have to stop before finishing
 cutlery — knives, forks, and spoons
 cynical — believing people are only interested in themselves and are not sincere
+dare — Don't you dare: used to tell someone strongly not to do something; I dare say: probably true
+dark — in the dark: not knowing because others aren't telling you
+dash — a small amount of something, often food
+dated — not modern
+dawn — the crack of dawn: very early morning (noun); dawn on sb: become aware of a fact (verb)
+day — call it a day: stop doing something; make sb's day: make someone very happy
+dazed — not able to think clearly due to shock or a hit to the head
+dazzle — make unable to see for a short time (light); think someone is extremely good or exciting (verb)
+dazzling — extremely good and exciting; so bright you cannot see for a short time
+dead — too quiet, nothing interesting happening (place); complete (silence); unable to feel (body part); drop dead: die very suddenly
+deaf — fall on deaf ears: ignore advice or a request
+dear — dear to sb's heart: very important to them
+death — to death: until you die; put to death: kill as punishment; a matter of life and/or death: serious situation where people could die
+debate — discuss formally
+decaffeinated — with caffeine removed (tea/coffee)
+decay — when something decays (noun)
+deceased — dead (adj); the deceased: someone who has died (noun)
+deception — making someone believe something not true
+deceptive — making you believe something not true
+decide — be the reason for a particular result; deciding factor: the thing that makes the final decision
+decisively — in a decisive way
+dedicate — dedicate to: say something is made to show love/respect for someone
+dedicated — designed for a particular purpose
+deduce — decide something is true using available information
+deduction — when you decide something using available information (fact)
+deem — judge or consider in a particular way (formal)
+deep — serious and difficult to understand; deep in thought: giving all attention; throw in at the deep end: start a difficult job without help (adj); go/run deep: be very strong/serious (adv)
+deepen — become or make worse/stronger
+defective — not working correctly or in good condition
+defence — the defence: the lawyers for the accused person
+defensive — quick to protect yourself from criticism
+deficiency — not having enough of something
+definitive — certain, clear, and not likely to change
+defy — refuse to obey; defy belief/description: be impossible to believe/describe
+degree — a small level or amount of something (a/some degree of)
+delegate — give someone else part of your work or responsibilities (verb)
+delegation — a group chosen to represent a larger group
+delicate — having a thin, attractive shape
+demolish — show that an idea or argument is wrong
+demonstrate — express or show a feeling, quality, or ability
+denial — when you say something is not true
+dependence — when you need someone or something all the time
+depict — represent someone/something in a picture or story
+deposit — a layer of a substance (natural/chemical)
+depressed — depressed area/economy: with not enough jobs or business activity
+depression — a time with not much business activity (economy)
+deprivation — the state of not having enough of something
+depth — how much someone knows/feels (noun); out of your depth: not having the knowledge/skills
+derive — derive pleasure/comfort from: get a positive feeling from
+descend — be descended from: be related to someone from long ago (formal)
+descendant — someone related to someone who lived long ago
+desired — the desired effect/result: the effect/result that is wanted
+desperate — very serious or bad (situation)
+desperation — the state of being desperate
+detached — not feeling involved or emotional about something
+deterrent — something that stops people doing something from fear
+detrimental — harmful or damaging
+devastating — causing a lot of damage or destruction
+devastation — serious damage from a violent event
+develop — start to happen or exist
+developer — someone who buys land to improve and sell (real estate)
+development — when something starts to happen or exist
+device — leave someone to their own devices: leave them to do what they want
+devil — someone who behaves badly (informal)
+devise — design or invent (a system, plan, or equipment)
+diagnose — say what is wrong with someone who is ill
+diagnosis — when a doctor says what is wrong (diagnoses)
+dialect — a form of a language spoken in a particular part of a country
+dialogue — a formal discussion between countries or groups
+diarrhoea — an illness with more liquid than usual solid waste
+dice — a small object with six sides used in games (noun); cut food into small square pieces (verb)
+die — die down: gradually become less loud/strong until it stops
+difference — a disagreement or different opinion
+differentiate — make someone or something different
+dignified — calm, serious, and deserving respect
+dignity — calm and serious behaviour deserving respect; beneath your dignity: too important to do
+dim — not bright or clear; a dim memory: remembered slightly
+diplomacy — dealing with relationships between governments; skill in dealing with people
+diplomatic — good at dealing with people without upsetting them
+diplomatically — in a way that deals well with people
+direction — the way someone/something changes or develops
+disadvantage — at a disadvantage: having problems others don't have
+disc — a piece of cartilage between back bones (slipped disc)
+discipline — a particular subject of study (formal)
+disclose — give new or secret information (formal)
+discomfort — slight pain (noun); feeling slightly embarrassed or anxious (noun)
+discourage — try to prevent something from happening
+discreet — careful not to cause embarrassment or attract attention
+discretion — being careful not to cause embarrassment/attract attention
+discriminate — notice a difference between two things
+disgrace — be a disgrace to: be so bad you cause disrespect for a group
+disguise — hide a feeling or opinion (verb)
+disgust — a very strong feeling of dislike or disapproval
+disillusioned — feeling disappointed because reality isn't as good as thought
+disloyal — not loyal, not supporting someone you should
+dismay — a feeling of unhappiness and disappointment
+disorder — when things are untidy, confused, not organized
+display — a display of affection/anger: showing a particular feeling (noun); to show how you feel (verb)
+disposable — intended to be used once and thrown away
+disposable income — money available to spend after essentials
+disposed — be disposed to do: be willing or likely to do (formal)
+disposition — the type of character someone has
+dispute — a disagreement (noun); to disagree with someone (verb); beyond dispute: certainly
+disqualify — stop someone from being in a competition for wrongdoing
+disrespectful — rude, not showing respect
+disruptive — causing problems that interrupt something
+dissolve — become part of a liquid (solid)
+distant — distant relative: not closely related
+distinct — easy to hear, see, or smell
+distinction — a quality that makes someone/something special or different
+distress — when someone/something is in danger and needs help
+disturb — make someone feel anxious or upset
+disturbance — when people fight or shout
+disturbed — not thinking/behaving normally due to mental/emotional problems
+disturbing — unpleasant, making people feel anxious or upset
+dive — dive into: start doing suddenly and energetically (verb)
+divert — send someone/something somewhere different than expected
+DNA — chemical in cells containing genetic information
+do — do the job: be suitable for a purpose; do justice: show the best qualities; make do (with): accept something less good
+dole — dole out: give something (especially money) to several people
+dominance — power, influence, and control
+dominant — strongest and wanting to take control
+donor — gives blood/organs; gives money/goods to those in need
+doom — death, destruction, and unavoidable unpleasant events; doom and gloom: unhappiness and no hope
+door — behind closed doors: privately
+doorway — an entrance to a building or room through a door
+dot — on the dot: at that exact time
+doubt — cast doubt on: make something seem uncertain; beyond/without a shadow of a doubt: certainly true
+down — be down to: be someone's responsibility; down under: Australia; down the drain: money/work wasted; down and out: no money, luck, or opportunities; be down in the dumps: be unhappy
+downhill — towards the bottom of a hill (adv); go downhill: gradually become worse
+downward — a downward spiral: a situation getting worse quickly
+drag — make someone go somewhere they don't want; continue too long in a boring way (time)
+drain — remove liquid from; liquid flows away; reduce or cause to reduce; make someone very tired (verb); a pipe for waste liquids (noun); a drain on: uses/wastes money or energy
+draw — pull gently; draw to a close: almost finish; draw a distinction: show a difference; draw the line (at): know the point of unacceptability
+dread — feel worried/frightened about something not yet happened; I dread to think: don't want to think about a worry
+dream — beyond/not in your wildest dreams: better than you could imagine; wouldn't dream of doing: would not do because wrong/silly
+drift — be moved slowly by wind/water; get into a situation/job without a plan
+drive — provide the power/energy that makes something work (verb)
+drop — drop it/the subject: stop talking about it; drop dead: die very suddenly (verb); a drop in the ocean: a very small amount compared to what's needed (noun)
+drought — a long period without rain
+drown — prevent a sound from being heard (loud noise)
+dry — not interesting (book/talk/subject) (adj); dry up: end (supply) (verb)
+dubious — thought not completely true/honest/legal; not certain that something is good/true
+duck — be (like) water off a duck's back: criticisms do not affect you
+due — owed to you or something you deserve; correct and suitable (formal)
+dump — put somewhere quickly and carelessly; end a romantic relationship (verb); a dirty and untidy place (noun); be down in the dumps: be unhappy
+dynamic — continuously changing or moving
